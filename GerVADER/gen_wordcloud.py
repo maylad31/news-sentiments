@@ -138,7 +138,7 @@ def get_wordcloud(inputfiles, name=None, ignore_words= ["Spiegel, FAZ"]):
     for file in inputfiles[1:]:
         df = df.append(pd.read_excel(file)[:200], ignore_index=True)
 
-    german_stop_words = stopwords.words('german')
+    german_stop_words = list(stopwords.words('german'))+ignore_words
     getwords_content_pre(df,inputfile,german_stop_words)
     getwords_content_post(df,inputfile,german_stop_words)
     getwords_headline_pre(df,inputfile,german_stop_words)
