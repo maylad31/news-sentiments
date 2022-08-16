@@ -6,13 +6,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 import matplotlib as mpl
-label_size = 8
+import datetime
+label_size = 12
 mpl.rcParams['xtick.labelsize'] = label_size 
-
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.family": "lmodern",
+    "font.size": 14,
+})
 
 def getrolling_content_pre(df,filename):
     """
-    get pre covid analysis considering content  
+    get pre covid analysis considering content
     :param df: dataframe
     :param filename: input filename used to generate output filename
 
@@ -50,7 +55,7 @@ def getrolling_content_pre(df,filename):
     plt.xticks(rotation=90)
     plt.xticks(fontsize=8)
     plt.plot(date_list,avg_sentiment_list)
-    plt.savefig(res_file+"_avg_sentiments_precovid_content"+".png") 
+    plt.savefig(res_file+"_avg_sentiments_precovid_content"+".png", bbox_inches='tight') 
     plt.xticks(rotation=0)
     plt.clf()
     return average_per_day
@@ -92,7 +97,7 @@ def getrolling_content_post(df,filename):
     plt.xticks(rotation=90)
     plt.xticks(fontsize=8)
     plt.plot(date_list,avg_sentiment_list)
-    plt.savefig(res_file+"_avg_sentiments_postcovid_content"+".png") 
+    plt.savefig(res_file+"_avg_sentiments_postcovid_content"+".png", bbox_inches='tight') 
     plt.xticks(rotation=0)
     plt.clf()
     return average_per_day
@@ -125,7 +130,7 @@ def getrolling_headline_pre(df,filename):
     plt.xticks(rotation=90)
     plt.xticks(fontsize=8)
     plt.plot(date_list,avg_sentiment_list)
-    plt.savefig(res_file+"_avg_sentiments_precovid_headline"+".png") 
+    plt.savefig(res_file+"_avg_sentiments_precovid_headline"+".png", bbox_inches='tight') 
     plt.xticks(rotation=0)
     plt.clf()
     
@@ -157,7 +162,7 @@ def getrolling_headline_post(df,filename):
     plt.xticks(rotation=90)
     plt.xticks(fontsize=8)
     plt.plot(date_list,avg_sentiment_list)
-    plt.savefig(res_file+"_avg_sentiments_postcovid_headline"+".png") 
+    plt.savefig(res_file+"_avg_sentiments_postcovid_headline"+".png", bbox_inches='tight') 
     plt.xticks(rotation=0)
     plt.clf()
     
@@ -225,7 +230,7 @@ def getrolling_headline_overall(df,filename):
         ax.legend(loc="upper right")
     fig.autofmt_xdate()
     res_file = filename.rsplit('.', 1)[0] 
-    plt.savefig(res_file+"_positive_negative_total_overtime_overall_headline"+".png") 
+    plt.savefig(res_file+"_positive_negative_total_overtime_overall_headline"+".png", bbox_inches='tight') 
     
     df1=df[["DATE","HEADLINE_SENTIMENT_SCORE"]]
     res = df1.groupby('DATE', as_index=False, sort=False)['HEADLINE_SENTIMENT_SCORE'].mean()
@@ -241,7 +246,7 @@ def getrolling_headline_overall(df,filename):
     plt.xlabel("Time")
     plt.ylabel("Score")
     plt.plot(date_list,avg_sentiment_list)
-    plt.savefig(res_file+"_avg_sentiments_overtime_overall_headline"+".png") 
+    plt.savefig(res_file+"_avg_sentiments_overtime_overall_headline"+".png", bbox_inches='tight') 
     plt.xticks(rotation=0)
     plt.clf()
 
@@ -307,7 +312,7 @@ def getrolling_content_overall(df,filename):
         ax.legend(loc="upper right")
     fig.autofmt_xdate()
     res_file = filename.rsplit('.', 1)[0] 
-    plt.savefig(res_file+"_positive_negative_total_overtime_overall_content"+".png") 
+    plt.savefig(res_file+"_positive_negative_total_overtime_overall_content"+".png", bbox_inches='tight') 
     
     df1=df[["DATE","CONTENT_SENTIMENT_SCORE"]]
     res = df1.groupby('DATE', as_index=False, sort=False)['CONTENT_SENTIMENT_SCORE'].mean()
@@ -323,7 +328,7 @@ def getrolling_content_overall(df,filename):
     plt.xticks(rotation=90)
     plt.xticks(fontsize=8)
     plt.plot(date_list,avg_sentiment_list)
-    plt.savefig(res_file+"_avg_sentiments_overtime_overall_content"+".png") 
+    plt.savefig(res_file+"_avg_sentiments_overtime_overall_content"+".png", bbox_inches='tight') 
     plt.xticks(rotation=0)
     plt.clf()
     
@@ -400,7 +405,7 @@ def getrolling_headline_topics(dataframe,topics,filename):
             ax.legend(loc="upper right")
         fig.autofmt_xdate()
         res_file = filename.rsplit('.', 1)[0] 
-        plt.savefig(res_file+"_positive_negative_total_headline_"+str(topic)+".png") 
+        plt.savefig(res_file+"_positive_negative_total_headline_"+str(topic)+".png", bbox_inches='tight') 
         
         df1=df[["DATE","HEADLINE_SENTIMENT_SCORE"]]
         res = df1.groupby('DATE', as_index=False, sort=False)['HEADLINE_SENTIMENT_SCORE'].mean()
@@ -416,7 +421,7 @@ def getrolling_headline_topics(dataframe,topics,filename):
         plt.xticks(rotation=90)
         plt.xticks(fontsize=8)
         plt.plot(date_list,avg_sentiment_list)
-        plt.savefig(res_file+"_avg_sentiments_headline_"+str(topic)+".png") 
+        plt.savefig(res_file+"_avg_sentiments_headline_"+str(topic)+".png", bbox_inches='tight') 
         plt.xticks(rotation=0)
         plt.clf()
 
@@ -492,7 +497,7 @@ def getrolling_content_topics(dataframe,topics,filename):
             ax.legend(loc="upper right")
         fig.autofmt_xdate()
         res_file = filename.rsplit('.', 1)[0] 
-        plt.savefig(res_file+"_positive_negative_total_content_"+str(topic)+".png") 
+        plt.savefig(res_file+"_positive_negative_total_content_"+str(topic)+".png", bbox_inches='tight') 
         
         df1=df[["DATE","CONTENT_SENTIMENT_SCORE"]]
         res = df1.groupby('DATE', as_index=False, sort=False)['CONTENT_SENTIMENT_SCORE'].mean()
@@ -509,21 +514,31 @@ def getrolling_content_topics(dataframe,topics,filename):
         plt.xticks(rotation=90)
         plt.xticks(fontsize=8)
         plt.plot(date_list,avg_sentiment_list)
-        plt.savefig(res_file+"_avg_sentiments_content_"+str(topic)+".png") 
+        plt.savefig(res_file+"_avg_sentiments_content_"+str(topic)+".png", bbox_inches='tight') 
         plt.xticks(rotation=0)
         plt.clf()
 
         
 
-def get_sentiments(inputfile):
+def get_sentiments(inputfiles, name=None):
     """
     :param inputfile: input filename(.xlsx)
-
+    :param name: name of the file to save
     """
-    analyzer = SentimentIntensityAnalyzer()
-    df=pd.read_excel(inputfile)
-    #df=df.head(500)
     
+    if name is None:
+        starts = [file.split('/')[-1][:3] for file in inputfiles]
+        name = f"{'_'.join([s for s in starts])}"
+    analyzer = SentimentIntensityAnalyzer()
+    
+    df = pd.read_excel(inputfiles[0])[:200]
+    for file in inputfiles[1:]:
+        df = df.append(pd.read_excel(file)[:200], ignore_index=True)
+    print(len(df))
+    print(df)
+        
+    #df=df.head(500)
+    df.dropna(subset=['DATE']) 
     #create columns
     df['HEADLINE_SENTIMENT'] = ''
     df['CONTENT_SENTIMENT'] = ''
@@ -531,12 +546,13 @@ def get_sentiments(inputfile):
     df['CONTENT_SENTIMENT_SCORE'] = 0
     df['ERA']='' #pre-covid ot post-covid
     
-    #make sure columns are string
+    # make sure columns are string, if not typecast
     df['HEADLINE'] = df['HEADLINE'].astype(str)
     df['CONYTENT'] = df['CONTENT'].astype(str)
     df['HEADLINE']  = df['HEADLINE'].fillna('')
     df['CONTENT']  = df['CONTENT'].fillna('')
-    df['YEAR']=df['DATE'].dt.year
+    df['DATE'] = pd.to_datetime(df['DATE'])
+    df['YEAR'] = df['DATE'].dt.year
     
     for index, row in tqdm.tqdm(df.iterrows(), total=df.shape[0]):
         
@@ -579,21 +595,21 @@ def get_sentiments(inputfile):
         else:
             score = 'neutral'
             df.loc[index,'CONTENT_SENTIMENT'] = score
-    res = inputfile.rsplit('.', 1)[0]         
-    df.to_excel(str(res)+"_sentiments.xlsx",index=False)  
+    # res = inputfile.rsplit('.', 1)[0]         
+    df.to_excel(str(name)+"_sentiments.xlsx",index=False)  
     df["DATE"] = pd.to_datetime(df["DATE"])
     df=df.sort_values('DATE')
     topics=df['TOPICS'].unique()
     
     #get analysis
-    getrolling_headline_overall(df,inputfile)   
-    getrolling_headline_topics(df,topics,inputfile)
-    getrolling_content_overall(df,inputfile)
-    getrolling_content_topics(df,topics,inputfile)
-    avg_per_day_pre=int(getrolling_content_pre(df,inputfile))
-    avg_per_day_post=int(getrolling_content_post(df,inputfile))
-    getrolling_headline_pre(df,inputfile)
-    getrolling_headline_post(df,inputfile)
+    getrolling_headline_overall(df,name)   
+    getrolling_headline_topics(df,topics,name)
+    getrolling_content_overall(df,name)
+    getrolling_content_topics(df,topics,name)
+    avg_per_day_pre=int(getrolling_content_pre(df,name))
+    avg_per_day_post=int(getrolling_content_post(df,name))
+    getrolling_headline_pre(df,name)
+    getrolling_headline_post(df,name)
     
     #plotting 
     plt.clf()
@@ -608,14 +624,15 @@ def get_sentiments(inputfile):
     ax.bar(keys, values, color ='maroon',width = 0.4)
     
     
-    plt.savefig(str(res)+"_average_articles_per_day_before_after_covid.png")
+    plt.savefig(str(name)+"_average_articles_per_day_before_after_covid.png", bbox_inches='tight')
     
     
     
 if __name__=="__main__":
-    parser = argparse.ArgumentParser(description='Analyse news data')
-    parser.add_argument('-f','--file', help='input file name', default="SPIEGEL_SCRAPING_BEREINIGT_12.07.2022.xlsx")
-    args = vars(parser.parse_args())
-    get_sentiments(args['file'])
+    # parser = argparse.ArgumentParser(description='Analyse news data')
+    # parser.add_argument('-f','--file', help='input file name', default=["/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/SUEDDEUTSCHE_SCRAPING_BEREINIGT_12.07.2022.xlsx", "/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/BILD_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
+    # args = vars(parser.parse_args())
+    get_sentiments(["/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/SUEDDEUTSCHE_SCRAPING_BEREINIGT_12.07.2022.xlsx", "/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/BILD_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
+    # get_sentiments(["/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/SUEDDEUTSCHE_SCRAPING_BEREINIGT_12.07.2022.xlsx", "/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/BILD_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
     
        
