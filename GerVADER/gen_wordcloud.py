@@ -21,13 +21,14 @@ def getwords_content_pre(df: pd.DataFrame, filename: str, german_stop_words: lis
     
     
     df = df.copy()
+    #drop post covid data
     for index, row in df.iterrows():
         if int(row["YEAR"])>2020:
             df.drop(index, inplace=True)
     df.dropna(inplace = True)
     
     
-    print(german_stop_words)
+    #print(german_stop_words)
     
     
     #get text
@@ -40,7 +41,7 @@ def getwords_content_pre(df: pd.DataFrame, filename: str, german_stop_words: lis
     
     #generate wordcloud
     word_cloud = WordCloud(collocations = False, background_color = 'white').generate(text)
-    
+    #save wordcloud
     word_cloud.to_file(filename+"_wordcloud_content_pre_covid"+".png")
    
     
@@ -54,6 +55,7 @@ def getwords_content_post(df: pd.DataFrame ,filename: str, german_stop_words: li
     """
     
     df=df.copy()
+    #drop pre covid data
     for index, row in df.iterrows():
         if int(row["YEAR"])<2021:
             df.drop(index, inplace=True)
@@ -69,7 +71,7 @@ def getwords_content_post(df: pd.DataFrame ,filename: str, german_stop_words: li
     
     #generate wordcloud
     word_cloud = WordCloud(collocations = False, background_color = 'white').generate(text)
-    
+    #save wordcloud 
     word_cloud.to_file(filename+"_wordcloud_content_post_covid"+".png")
 
 def getwords_headline_pre(df: pd.DataFrame, filename: str, german_stop_words: list[str]) -> None:
@@ -81,6 +83,7 @@ def getwords_headline_pre(df: pd.DataFrame, filename: str, german_stop_words: li
     """
     
     df=df.copy()
+    #drop post covid data
     for index, row in df.iterrows():
         if int(row["YEAR"])>2020:
             df.drop(index, inplace=True)
@@ -107,6 +110,7 @@ def getwords_headline_post(df: pd.DataFrame, filename: str, german_stop_words: l
     """
     
     df=df.copy()
+    #drop pre covid data
     for index, row in df.iterrows():
         if int(row["YEAR"])<2021:
             df.drop(index, inplace=True)
@@ -124,6 +128,7 @@ def getwords_headline_post(df: pd.DataFrame, filename: str, german_stop_words: l
     word_cloud = WordCloud(collocations = False, background_color = 'white').generate(text)
     
     # res_file = filename.rsplit('.', 1)[0] 
+    #save wordcloud
     word_cloud.to_file(filename+"_wordcloud_headline_post_covid"+".png")    
 
 
