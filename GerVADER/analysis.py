@@ -15,7 +15,7 @@ plt.rcParams.update({
     "font.size": 14,
 })
 
-def getrolling_content_pre(df,filename):
+def getrolling_content_pre(df: pd.DataFrame, filename: str) -> None:
     """
     get pre covid analysis considering content
     :param df: dataframe
@@ -44,8 +44,8 @@ def getrolling_content_pre(df,filename):
     res = df1.groupby('DATE', as_index=False, sort=False)['CONTENT_SENTIMENT_SCORE'].mean()
     res['rolling_mean'] = res['CONTENT_SENTIMENT_SCORE'].rolling(28).mean()
     avg_sentiment_list=[0]+res["rolling_mean"].tolist()[1:]
-    avg_sentiment_list=avg_sentiment_list[::28]
-    date_list=["week"+str(4*i) for i in range(len(avg_sentiment_list))]
+    # avg_sentiment_list=avg_sentiment_list
+    date_list=["week "+str(i//7) for i in range(len(avg_sentiment_list))]
     
     #plotting average sentiment
     plt.clf()
@@ -53,14 +53,18 @@ def getrolling_content_pre(df,filename):
     plt.xlabel("Time")
     plt.ylabel("Score")
     plt.xticks(rotation=90)
+    plt.xticks(date_list[::28])
+    plt.xticks(ticks=np.arange(len(avg_sentiment_list))[::28], labels=date_list[::28])
     plt.xticks(fontsize=8)
-    plt.plot(date_list,avg_sentiment_list)
+    plt.plot(avg_sentiment_list)
     plt.savefig(res_file+"_avg_sentiments_precovid_content"+".png", bbox_inches='tight') 
     plt.xticks(rotation=0)
     plt.clf()
     return average_per_day
 
-def getrolling_content_post(df,filename):
+# def format_plot(x, y, x_labl, y_label):
+
+def getrolling_content_post(df: pd.DataFrame, filename: str) -> None:
     """
     get post covid analysis considering content  
     :param df: dataframe
@@ -86,8 +90,8 @@ def getrolling_content_post(df,filename):
     res = df1.groupby('DATE', as_index=False, sort=False)['CONTENT_SENTIMENT_SCORE'].mean()
     res['rolling_mean'] = res['CONTENT_SENTIMENT_SCORE'].rolling(28).mean()
     avg_sentiment_list=[0]+res["rolling_mean"].tolist()[1:]
-    avg_sentiment_list=avg_sentiment_list[::28]
-    date_list=["week"+str(4*i) for i in range(len(avg_sentiment_list))]
+    # avg_sentiment_list=avg_sentiment_list
+    date_list=["week "+str(i//7) for i in range(len(avg_sentiment_list))]
     
     #plotting average sentiment
     plt.clf()
@@ -96,13 +100,14 @@ def getrolling_content_post(df,filename):
     plt.ylabel("Score")
     plt.xticks(rotation=90)
     plt.xticks(fontsize=8)
-    plt.plot(date_list,avg_sentiment_list)
+    plt.xticks(ticks=np.arange(len(avg_sentiment_list))[::28], labels=date_list[::28])
+    plt.plot(avg_sentiment_list)
     plt.savefig(res_file+"_avg_sentiments_postcovid_content"+".png", bbox_inches='tight') 
     plt.xticks(rotation=0)
     plt.clf()
     return average_per_day
 
-def getrolling_headline_pre(df,filename):
+def getrolling_headline_pre(df: pd.DataFrame, filename: str) -> None:
     """
     get pre covid analysis considering headline
     :param df: dataframe
@@ -119,8 +124,8 @@ def getrolling_headline_pre(df,filename):
     res = df1.groupby('DATE', as_index=False, sort=False)['HEADLINE_SENTIMENT_SCORE'].mean()
     res['rolling_mean'] = res['HEADLINE_SENTIMENT_SCORE'].rolling(28).mean()
     avg_sentiment_list=[0]+res["rolling_mean"].tolist()[1:]
-    avg_sentiment_list=avg_sentiment_list[::28]
-    date_list=["week"+str(4*i) for i in range(len(avg_sentiment_list))]
+    # avg_sentiment_list=avg_sentiment_list
+    date_list=["week "+str(i//7) for i in range(len(avg_sentiment_list))]
     
     #plotting average sentiment
     plt.clf()
@@ -129,13 +134,14 @@ def getrolling_headline_pre(df,filename):
     plt.ylabel("Score")
     plt.xticks(rotation=90)
     plt.xticks(fontsize=8)
-    plt.plot(date_list,avg_sentiment_list)
+    plt.xticks(ticks=np.arange(len(avg_sentiment_list))[::28], labels=date_list[::28])
+    plt.plot(avg_sentiment_list)
     plt.savefig(res_file+"_avg_sentiments_precovid_headline"+".png", bbox_inches='tight') 
     plt.xticks(rotation=0)
     plt.clf()
     
     
-def getrolling_headline_post(df,filename):
+def getrolling_headline_post(df: pd.DataFrame, filename: str) -> None:
     """
     get post covid analysis considering headline
     :param df: dataframe
@@ -151,8 +157,8 @@ def getrolling_headline_post(df,filename):
     res = df1.groupby('DATE', as_index=False, sort=False)['HEADLINE_SENTIMENT_SCORE'].mean()
     res['rolling_mean'] = res['HEADLINE_SENTIMENT_SCORE'].rolling(28).mean()
     avg_sentiment_list=[0]+res["rolling_mean"].tolist()[1:]
-    avg_sentiment_list=avg_sentiment_list[::28]
-    date_list=["week"+str(4*i) for i in range(len(avg_sentiment_list))]
+    # avg_sentiment_list=avg_sentiment_list
+    date_list=["week "+str(i//7) for i in range(len(avg_sentiment_list))]
     plt.clf()
     
     #plotting average sentiment
@@ -161,14 +167,15 @@ def getrolling_headline_post(df,filename):
     plt.ylabel("Score")
     plt.xticks(rotation=90)
     plt.xticks(fontsize=8)
-    plt.plot(date_list,avg_sentiment_list)
+    plt.xticks(ticks=np.arange(len(avg_sentiment_list))[::28], labels=date_list[::28])
+    plt.plot(avg_sentiment_list)
     plt.savefig(res_file+"_avg_sentiments_postcovid_headline"+".png", bbox_inches='tight') 
     plt.xticks(rotation=0)
     plt.clf()
     
 
 
-def getrolling_headline_overall(df,filename):
+def getrolling_headline_overall(df: pd.DataFrame, filename: str) -> None:
     """
     get positive, negative, neutral, total articles along with average sentiment overtime considering headline    
     :param df: dataframe
@@ -176,12 +183,9 @@ def getrolling_headline_overall(df,filename):
 
     """
     
-    #df=pd.read_excel("SPIEGEL_SCRAPING_BEREINIGT_12.07.2022_sentiments.xlsx")
-    
     df1=df[["DATE","HEADLINE_SENTIMENT"]]
     
     #get rolling count
-        
     out = (
         df1
         .groupby(['DATE', 'HEADLINE_SENTIMENT']) # set the columns as index
@@ -198,8 +202,6 @@ def getrolling_headline_overall(df,filename):
     negative_list=[0]+out["negative"].tolist()[1:]
     
     #calculating total no of articles
-    
-   
     out["total"]=0
     for index,row in out.iterrows():
         neutral=int(row["neutral"])
@@ -212,12 +214,11 @@ def getrolling_headline_overall(df,filename):
     total_list=[0]+out["total"].tolist()[1:]   
        
     #choose every 28th for easy plotting
-    neutral_list=neutral_list[::28]
-    positive_list=positive_list[::28]
-    negative_list=negative_list[::28]
-    total_list=total_list[::28]
-    date_list=["week"+str(4*i) for i in range(len(neutral_list))]
-    
+    # neutral_list=neutral_list
+    # positive_list=positive_list
+    # negative_list=negative_list
+    # total_list=total_list
+    date_list=["week "+str(i//7) for i in range(len(neutral_list))]
     
     
     #plotting positive negative neutral and total articles overtime
@@ -226,43 +227,43 @@ def getrolling_headline_overall(df,filename):
     fig.supxlabel('Time')
     fig.supylabel('Count')
     for Y in [(neutral_list,"neutral","red"),(positive_list,"positive","blue"),(negative_list,"negative","green"),(total_list,"total","orange")]:
-        ax.plot(date_list, Y[0],color=Y[2], label=Y[1])
+        ax.plot(np.arange(len(neutral_list)), Y[0],color=Y[2], label=Y[1])
         ax.legend(loc="upper right")
     fig.autofmt_xdate()
     res_file = filename.rsplit('.', 1)[0] 
+    plt.xticks(ticks=np.arange(len(neutral_list))[::28], labels=date_list[::28])
     plt.savefig(res_file+"_positive_negative_total_overtime_overall_headline"+".png", bbox_inches='tight') 
     
     df1=df[["DATE","HEADLINE_SENTIMENT_SCORE"]]
     res = df1.groupby('DATE', as_index=False, sort=False)['HEADLINE_SENTIMENT_SCORE'].mean()
     res['rolling_mean'] = res['HEADLINE_SENTIMENT_SCORE'].rolling(28).mean()
     avg_sentiment_list=[0]+res["rolling_mean"].tolist()[1:]
-    avg_sentiment_list=avg_sentiment_list[::28]
+    # avg_sentiment_list=avg_sentiment_list
     
     #plotting average sentiment
     plt.clf()
     plt.title("Average sentiment over time")
     plt.xticks(rotation=90)
     plt.xticks(fontsize=8)
+    plt.xticks(ticks=np.arange(len(neutral_list))[::28], labels=date_list[::28])
     plt.xlabel("Time")
     plt.ylabel("Score")
-    plt.plot(date_list,avg_sentiment_list)
+    plt.plot(np.arange(len(avg_sentiment_list)),avg_sentiment_list)
     plt.savefig(res_file+"_avg_sentiments_overtime_overall_headline"+".png", bbox_inches='tight') 
     plt.xticks(rotation=0)
     plt.clf()
 
 
-def getrolling_content_overall(df,filename):
+def getrolling_content_overall(df: pd.DataFrame, filename: str) -> None:
     """
     get positive, negative, neutral, total articles along with average sentiment overtime considering content    
     :param df: dataframe
     :param filename: input filename used to generate output filename
 
     """
-    #df=pd.read_excel("SPIEGEL_SCRAPING_BEREINIGT_12.07.2022_sentiments.xlsx")
     
     df1=df[["DATE","CONTENT_SENTIMENT"]]
     
-    #df1=df1.head(10000) 
     
     #get rolling count   
     out = (
@@ -296,11 +297,11 @@ def getrolling_content_overall(df,filename):
     
     
     #choose every 28th for easy plotting
-    neutral_list=neutral_list[::28]
-    positive_list=positive_list[::28]
-    negative_list=negative_list[::28]
-    total_list=total_list[::28]
-    date_list=["week"+str(4*i) for i in range(len(neutral_list))]
+    # neutral_list=neutral_list
+    # positive_list=positive_list
+    # negative_list=negative_list
+    # total_list=total_list
+    date_list=["week"+str(i//7) for i in range(len(neutral_list))]
         
     #plotting positive negative neutral and total articles overtime
     fig, ax = plt.subplots()
@@ -308,7 +309,8 @@ def getrolling_content_overall(df,filename):
     fig.supxlabel('Time')
     fig.supylabel('Count')
     for Y in [(neutral_list,"neutral","red"),(positive_list,"positive","blue"),(negative_list,"negative","green"),(total_list,"total","orange")]:
-        ax.plot(date_list, Y[0],color=Y[2], label=Y[1])
+        plt.xticks(ticks=np.arange(len(Y[0]))[::28], labels=date_list[::28])
+        ax.plot(Y[0],color=Y[2], label=Y[1])
         ax.legend(loc="upper right")
     fig.autofmt_xdate()
     res_file = filename.rsplit('.', 1)[0] 
@@ -318,7 +320,7 @@ def getrolling_content_overall(df,filename):
     res = df1.groupby('DATE', as_index=False, sort=False)['CONTENT_SENTIMENT_SCORE'].mean()
     res['rolling_mean'] = res['CONTENT_SENTIMENT_SCORE'].rolling(28).mean()
     avg_sentiment_list=[0]+res["rolling_mean"].tolist()[1:]
-    avg_sentiment_list=avg_sentiment_list[::28]
+    avg_sentiment_list=avg_sentiment_list
     
     #plotting average sentiment overtime
     plt.clf()
@@ -327,7 +329,8 @@ def getrolling_content_overall(df,filename):
     plt.ylabel("Score")
     plt.xticks(rotation=90)
     plt.xticks(fontsize=8)
-    plt.plot(date_list,avg_sentiment_list)
+    plt.xticks(ticks=np.arange(len(avg_sentiment_list))[::28], labels=date_list[::28])
+    plt.plot(avg_sentiment_list)
     plt.savefig(res_file+"_avg_sentiments_overtime_overall_content"+".png", bbox_inches='tight') 
     plt.xticks(rotation=0)
     plt.clf()
@@ -342,14 +345,12 @@ def getrolling_headline_topics(dataframe,topics,filename):
     :param filename: input filename used to generate output filename
 
     """
-    #df=pd.read_excel("SPIEGEL_SCRAPING_BEREINIGT_12.07.2022_sentiments.xlsx")
     for topic in topics:
         df=dataframe[dataframe['TOPICS'] == topic].copy()
         df["DATE"] = pd.to_datetime(df["DATE"])
         df=df.sort_values('DATE')
         df1=df[["DATE","HEADLINE_SENTIMENT"]]
         
-        #df1=df1.head(10000)    
         out = (
             df1
             .groupby(['DATE', 'HEADLINE_SENTIMENT']) # set the columns as index
@@ -367,8 +368,6 @@ def getrolling_headline_topics(dataframe,topics,filename):
         negative_list=[0]+out["negative"].tolist()[1:]
         
         #calculating total no of articles
-        
-        
         out["total"]=0
         for index,row in out.iterrows():
             neutral=int(row["neutral"])
@@ -379,19 +378,14 @@ def getrolling_headline_topics(dataframe,topics,filename):
             
         
         total_list=[0]+out["total"].tolist()[1:]   
-        #out=out.reset_index()
         
-        
-        #date_list=out["DATE"].tolist() 
-        #print(date_list)
-        #date_list=date_list[::28]
         
         #choose every 28th for easy plotting
-        neutral_list=neutral_list[::28]
-        positive_list=positive_list[::28]
-        negative_list=negative_list[::28]
-        total_list=total_list[::28]
-        date_list=["week"+str(4*i) for i in range(len(neutral_list))]
+        # neutral_list=neutral_list
+        # positive_list=positive_list
+        # negative_list=negative_list
+        # total_list=total_list
+        date_list=["week"+str(i//7) for i in range(len(neutral_list))]
         
         
         
@@ -401,7 +395,8 @@ def getrolling_headline_topics(dataframe,topics,filename):
         fig.supxlabel('Time')
         fig.supylabel('Count')
         for Y in [(neutral_list,"neutral","red"),(positive_list,"positive","blue"),(negative_list,"negative","green"),(total_list,"total","orange")]:
-            ax.plot(date_list, Y[0],color=Y[2], label=Y[1])
+            plt.xticks(ticks=np.arange(len(Y[0]))[::28], labels=date_list[::28])
+            ax.plot(Y[0],color=Y[2], label=Y[1])
             ax.legend(loc="upper right")
         fig.autofmt_xdate()
         res_file = filename.rsplit('.', 1)[0] 
@@ -411,7 +406,7 @@ def getrolling_headline_topics(dataframe,topics,filename):
         res = df1.groupby('DATE', as_index=False, sort=False)['HEADLINE_SENTIMENT_SCORE'].mean()
         res['rolling_mean'] = res['HEADLINE_SENTIMENT_SCORE'].rolling(28).mean()
         avg_sentiment_list=[0]+res["rolling_mean"].tolist()[1:]
-        avg_sentiment_list=avg_sentiment_list[::28]
+        # avg_sentiment_list=avg_sentiment_list
         
         #plotting average sentiment
         plt.clf()
@@ -420,7 +415,8 @@ def getrolling_headline_topics(dataframe,topics,filename):
         plt.ylabel("Score")
         plt.xticks(rotation=90)
         plt.xticks(fontsize=8)
-        plt.plot(date_list,avg_sentiment_list)
+        plt.xticks(ticks=np.arange(len(avg_sentiment_list))[::28], labels=date_list[::28])
+        plt.plot(avg_sentiment_list)
         plt.savefig(res_file+"_avg_sentiments_headline_"+str(topic)+".png", bbox_inches='tight') 
         plt.xticks(rotation=0)
         plt.clf()
@@ -435,14 +431,12 @@ def getrolling_content_topics(dataframe,topics,filename):
     :param filename: input filename used to generate output filename
 
     """
-    #df=pd.read_excel("SPIEGEL_SCRAPING_BEREINIGT_12.07.2022_sentiments.xlsx")
     for topic in topics:
         df=dataframe[dataframe['TOPICS'] == topic].copy()
         df["DATE"] = pd.to_datetime(df["DATE"])
         df=df.sort_values('DATE')
         df1=df[["DATE","CONTENT_SENTIMENT"]]
         
-        #df1=df1.head(10000)    
         out = (
             df1
             .groupby(['DATE', 'CONTENT_SENTIMENT']) # set the columns as index
@@ -459,8 +453,6 @@ def getrolling_content_topics(dataframe,topics,filename):
         negative_list=[0]+out["negative"].tolist()[1:]
         
         #calculating total no of articles
-        
-        
         out["total"]=0
         for index,row in out.iterrows():
             neutral=int(row["neutral"])
@@ -471,21 +463,13 @@ def getrolling_content_topics(dataframe,topics,filename):
             
         
         total_list=[0]+out["total"].tolist()[1:]   
-        #out=out.reset_index()
-        
-        
-        #date_list=out["DATE"].tolist() 
-        #print(date_list)
-        #date_list=date_list[::28]
         
         #choose every 28th for easy plotting
-        neutral_list=neutral_list[::28]
-        positive_list=positive_list[::28]
-        negative_list=negative_list[::28]
-        total_list=total_list[::28]
-        date_list=["week"+str(4*i) for i in range(len(neutral_list))]
-        
-        
+        # neutral_list=neutral_list
+        # positive_list=positive_list
+        # negative_list=negative_list
+        # total_list=total_list
+        date_list=["week"+str(i//7) for i in range(len(neutral_list))]
         
         #plotting positive, negative, neutral, total
         fig, ax = plt.subplots()
@@ -493,7 +477,8 @@ def getrolling_content_topics(dataframe,topics,filename):
         fig.supxlabel('Time')
         fig.supylabel('Count')
         for Y in [(neutral_list,"neutral","red"),(positive_list,"positive","blue"),(negative_list,"negative","green"),(total_list,"total","orange")]:
-            ax.plot(date_list, Y[0],color=Y[2], label=Y[1])
+            plt.xticks(ticks=np.arange(len(Y[0]))[::28], labels=date_list[::28])
+            ax.plot(Y[0],color=Y[2], label=Y[1])
             ax.legend(loc="upper right")
         fig.autofmt_xdate()
         res_file = filename.rsplit('.', 1)[0] 
@@ -504,7 +489,7 @@ def getrolling_content_topics(dataframe,topics,filename):
         
         res['rolling_mean'] = res['CONTENT_SENTIMENT_SCORE'].rolling(28).mean()
         avg_sentiment_list=[0]+res["rolling_mean"].tolist()[1:]
-        avg_sentiment_list=avg_sentiment_list[::28]
+        avg_sentiment_list=avg_sentiment_list
         
         #plotting average sentiment
         plt.clf()
@@ -513,7 +498,8 @@ def getrolling_content_topics(dataframe,topics,filename):
         plt.ylabel("Score")
         plt.xticks(rotation=90)
         plt.xticks(fontsize=8)
-        plt.plot(date_list,avg_sentiment_list)
+        plt.xticks(ticks=np.arange(len(avg_sentiment_list))[::28], labels=date_list[::28])
+        plt.plot(avg_sentiment_list)
         plt.savefig(res_file+"_avg_sentiments_content_"+str(topic)+".png", bbox_inches='tight') 
         plt.xticks(rotation=0)
         plt.clf()
@@ -531,14 +517,14 @@ def get_sentiments(inputfiles, name=None):
         name = f"{'_'.join([s for s in starts])}"
     analyzer = SentimentIntensityAnalyzer()
     
-    df = pd.read_excel(inputfiles[0])[:200]
+    df = pd.read_excel(inputfiles[0])
     for file in inputfiles[1:]:
-        df = df.append(pd.read_excel(file)[:200], ignore_index=True)
+        df = df.append(pd.read_excel(file), ignore_index=True)
     print(len(df))
     print(df)
         
-    #df=df.head(500)
     df.dropna(subset=['DATE']) 
+
     #create columns
     df['HEADLINE_SENTIMENT'] = ''
     df['CONTENT_SENTIMENT'] = ''
@@ -558,7 +544,6 @@ def get_sentiments(inputfiles, name=None):
         
        
         # calculate headline sentiment and store
-        
         if int(row["YEAR"])<2021:
             era="pre"
         else:
@@ -595,7 +580,6 @@ def get_sentiments(inputfiles, name=None):
         else:
             score = 'neutral'
             df.loc[index,'CONTENT_SENTIMENT'] = score
-    # res = inputfile.rsplit('.', 1)[0]         
     df.to_excel(str(name)+"_sentiments.xlsx",index=False)  
     df["DATE"] = pd.to_datetime(df["DATE"])
     df=df.sort_values('DATE')
@@ -618,7 +602,7 @@ def get_sentiments(inputfiles, name=None):
     values = list(data.values())
    
     fig, ax = plt.subplots()
-     # Add some text for labels, title and custom x-axis tick labels, etc.
+    # Add some text for labels, title and custom x-axis tick labels, etc.
     ax.set_ylabel('Articles per day')
     ax.set_title('Articles per day before \n and after covid')
     ax.bar(keys, values, color ='maroon',width = 0.4)
@@ -629,10 +613,6 @@ def get_sentiments(inputfiles, name=None):
     
     
 if __name__=="__main__":
-    # parser = argparse.ArgumentParser(description='Analyse news data')
-    # parser.add_argument('-f','--file', help='input file name', default=["/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/SUEDDEUTSCHE_SCRAPING_BEREINIGT_12.07.2022.xlsx", "/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/BILD_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
-    # args = vars(parser.parse_args())
-    get_sentiments(["/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/SUEDDEUTSCHE_SCRAPING_BEREINIGT_12.07.2022.xlsx", "/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/BILD_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
-    # get_sentiments(["/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/SUEDDEUTSCHE_SCRAPING_BEREINIGT_12.07.2022.xlsx", "/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/BILD_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
+    get_sentiments(["/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/BILD_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
     
        

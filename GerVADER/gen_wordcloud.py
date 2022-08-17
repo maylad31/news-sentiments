@@ -11,7 +11,7 @@ from nltk.corpus import stopwords
 
 
     
-def getwords_content_pre(df,filename,german_stop_words):
+def getwords_content_pre(df: pd.DataFrame, filename: str, german_stop_words: list[str]) -> None:
     """
     wordcloud for pre covid using content
     :param df: dataframe
@@ -19,8 +19,8 @@ def getwords_content_pre(df,filename,german_stop_words):
 
     """
     
-    #df=pd.read_excel("SPIEGEL_SCRAPING_BEREINIGT_12.07.2022_sentiments.xlsx")
-    df=df.copy()
+    
+    df = df.copy()
     for index, row in df.iterrows():
         if int(row["YEAR"])>2020:
             df.drop(index, inplace=True)
@@ -41,12 +41,11 @@ def getwords_content_pre(df,filename,german_stop_words):
     #generate wordcloud
     word_cloud = WordCloud(collocations = False, background_color = 'white').generate(text)
     
-    res_file = filename.rsplit('.', 1)[0] 
-    word_cloud.to_file(res_file+"_wordcloud_content_pre_covid"+".png")
+    word_cloud.to_file(filename+"_wordcloud_content_pre_covid"+".png")
    
     
 
-def getwords_content_post(df,filename,german_stop_words):
+def getwords_content_post(df: pd.DataFrame ,filename: str, german_stop_words: list[str]) -> None:
     """
     wordcloud for post covid using content
     :param df: dataframe
@@ -71,10 +70,9 @@ def getwords_content_post(df,filename,german_stop_words):
     #generate wordcloud
     word_cloud = WordCloud(collocations = False, background_color = 'white').generate(text)
     
-    res_file = filename.rsplit('.', 1)[0] 
-    word_cloud.to_file(res_file+"_wordcloud_content_post_covid"+".png")
+    word_cloud.to_file(filename+"_wordcloud_content_post_covid"+".png")
 
-def getwords_headline_pre(df,filename,german_stop_words):
+def getwords_headline_pre(df: pd.DataFrame, filename: str, german_stop_words: list[str]) -> None:
     """
     wordcloud for pre covid using headline
     :param df: dataframe
@@ -98,10 +96,9 @@ def getwords_headline_pre(df,filename,german_stop_words):
     #generate wordcloud
     word_cloud = WordCloud(collocations = False, background_color = 'white').generate(text)
     
-    res_file = filename.rsplit('.', 1)[0] 
-    word_cloud.to_file(res_file+"_wordcloud_headline_pre_covid"+".png")
+    word_cloud.to_file(filename+"_wordcloud_headline_pre_covid"+".png")
     
-def getwords_headline_post(df,filename,german_stop_words):
+def getwords_headline_post(df: pd.DataFrame, filename: str, german_stop_words: list[str]) -> None:
     """
     wordcloud for post covid using headline
     :param df: dataframe
@@ -126,36 +123,43 @@ def getwords_headline_post(df,filename,german_stop_words):
     #generate wordcloud
     word_cloud = WordCloud(collocations = False, background_color = 'white').generate(text)
     
-    res_file = filename.rsplit('.', 1)[0] 
-    word_cloud.to_file(res_file+"_wordcloud_headline_post_covid"+".png")    
+    # res_file = filename.rsplit('.', 1)[0] 
+    word_cloud.to_file(filename+"_wordcloud_headline_post_covid"+".png")    
 
 
 
         
 
-def get_wordcloud(inputfiles, name=None, ignore_words= ["Spiegel, FAZ"]):
+def get_wordcloud(inputfiles: list[str], name: str or None = None, ignore_words: list[str] = ["Spiegel, FAZ"]) -> None:
     """
     generate wordcloud
     :param inputfile: input filename(.xlsx)
 
     """
     
-    # df=pd.read_excel(inputfile)
+    # generate name to save files
     if name is None:
         starts = [file.split('/')[-1][:3] for file in inputfiles]
     name = f"{'_'.join([s for s in starts])}"
     
+    # append all the passed dataframes into one big one
     df = pd.read_excel(inputfiles[0])[:200]
     for file in inputfiles[1:]:
         df = df.append(pd.read_excel(file)[:200], ignore_index=True)
+
+    # convert dates from string to datetime
     df['DATE'] = pd.to_datetime(df['DATE'])
     df['YEAR'] = df['DATE'].dt.year    
-    inputfile="result.xlsx"
+
+    
+    # create list of stopwords and add all the words that should be ignored
     german_stop_words = list(stopwords.words('german'))+ignore_words
-    getwords_content_pre(df,inputfile,german_stop_words)
-    getwords_content_post(df,inputfile,german_stop_words)
-    getwords_headline_pre(df,inputfile,german_stop_words)
-    getwords_headline_post(df,inputfile,german_stop_words)
+
+    # generate the plots
+    getwords_content_pre(df,name,german_stop_words)
+    getwords_content_post(df,name,german_stop_words)
+    getwords_headline_pre(df,name,german_stop_words)
+    getwords_headline_post(df,name,german_stop_words)
     
     
     
@@ -164,6 +168,6 @@ if __name__=="__main__":
     # parser = argparse.ArgumentParser(description='Generate wordcloud')
     # parser.add_argument('-f','--file', help='input file name(with sentiments)', default="SPIEGEL_SCRAPING_BEREINIGT_12.07.2022_sentiments.xlsx")
     # args = vars(parser.parse_args())
-    get_wordcloud(inputfiles=["SUEDDEUTSCHE_SCRAPING_BEREINIGT_12.07.2022.xlsx", "BILD_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
+    get_wordcloud(inputfiles=["/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/FAZ_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
     
        
