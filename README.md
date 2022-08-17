@@ -9,8 +9,8 @@ Running instructions: Inside GerVADER  run the following commands=>
 
 pip install -r requirements.txt
 
-python analysis.py --file "inputfilename.xlsx"
+python analysis.py 
 
-python gen_wordcloud.py --file "sentimentfilename.xlsx generated after running above command"
+python gen_wordcloud.py 
 
 Note: place xlsx file in GerVADER folder
