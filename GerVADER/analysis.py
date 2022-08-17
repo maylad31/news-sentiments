@@ -51,7 +51,7 @@ def getrolling_content_pre(df: pd.DataFrame, filename: str) -> None:
     :param df: dataframe
     :param filename: input filename used to generate output filename
     """
-
+    #get pre covid data
     df=df[df['ERA'] == "pre"].copy()
     
     df["DATE"] = pd.to_datetime(df["DATE"])
@@ -64,7 +64,7 @@ def getrolling_content_pre(df: pd.DataFrame, filename: str) -> None:
     res.columns = ['DATE', 'PUBLISHER','COUNTS']
     average_per_day=res['COUNTS'].mean()
     
-        
+    #select date and sentiment score    
     df1=df[["DATE","CONTENT_SENTIMENT_SCORE"]]
     
     #get rolling mean
@@ -89,7 +89,7 @@ def getrolling_content_post(df: pd.DataFrame, filename: str) -> None:
     :param df: dataframe
     :param filename: input filename used to generate output filename
     """
-
+    #get post covid data
     df=df[df['ERA'] == "post"].copy()
     df["DATE"] = pd.to_datetime(df["DATE"])
     df=df.sort_values('DATE')
@@ -101,7 +101,7 @@ def getrolling_content_post(df: pd.DataFrame, filename: str) -> None:
     res.columns = ['DATE', 'PUBLISHER','COUNTS']
     average_per_day=res['COUNTS'].mean()
     
-        
+    #select date and sentiment score     
     df1=df[["DATE","CONTENT_SENTIMENT_SCORE"]]
     
     #get rolling mean
@@ -124,7 +124,7 @@ def getrolling_headline_pre(df: pd.DataFrame, filename: str) -> None:
     :param filename: input filename used to generate output filename
 
     """
-    
+    #getting pre covid data
     df=df[df['ERA'] == "pre"].copy()
     df["DATE"] = pd.to_datetime(df["DATE"])
     df=df.sort_values('DATE')
@@ -147,6 +147,7 @@ def getrolling_headline_post(df: pd.DataFrame, filename: str) -> None:
     :param filename: input filename used to generate output filename
 
     """
+    #getting post covid data
     df=df[df['ERA'] == "post"].copy()
     df["DATE"] = pd.to_datetime(df["DATE"])
     df=df.sort_values('DATE')    
@@ -215,7 +216,7 @@ def getrolling_headline_overall(df: pd.DataFrame, filename: str) -> None:
     fig.autofmt_xdate()
     plt.xticks(ticks=np.arange(len(neutral_list))[::28], labels=date_list[::28])
     plt.savefig(filename+"_positive_negative_total_overtime_overall_headline"+".png", bbox_inches='tight') 
-    
+    #select date and sentiment score 
     df1=df[["DATE","HEADLINE_SENTIMENT_SCORE"]]
     res = df1.groupby('DATE', as_index=False, sort=False)['HEADLINE_SENTIMENT_SCORE'].mean()
     res['rolling_mean'] = res['HEADLINE_SENTIMENT_SCORE'].rolling(28).mean()
@@ -280,7 +281,7 @@ def getrolling_content_overall(df: pd.DataFrame, filename: str) -> None:
         ax.legend(loc="upper right")
     fig.autofmt_xdate()
     plt.savefig(filename+"_positive_negative_total_overtime_overall_content"+".png", bbox_inches='tight') 
-    
+    #select date and sentiment score 
     df1=df[["DATE","CONTENT_SENTIMENT_SCORE"]]
     res = df1.groupby('DATE', as_index=False, sort=False)['CONTENT_SENTIMENT_SCORE'].mean()
     res['rolling_mean'] = res['CONTENT_SENTIMENT_SCORE'].rolling(28).mean()
@@ -460,8 +461,8 @@ def get_sentiments(inputfiles, name=None):
     #create columns
     df['HEADLINE_SENTIMENT'] = ''
     df['CONTENT_SENTIMENT'] = ''
-    df['HEADLINE_SENTIMENT_SCORE'] = 0
-    df['CONTENT_SENTIMENT_SCORE'] = 0
+    df['HEADLINE_SENTIMENT_SCORE'] = 0 #to store headline sentiment score
+    df['CONTENT_SENTIMENT_SCORE'] = 0  #to store content sentiment score
     df['ERA']='' #pre-covid ot post-covid
     
     # make sure columns are string, if not typecast
@@ -475,12 +476,13 @@ def get_sentiments(inputfiles, name=None):
     for index, row in tqdm.tqdm(df.iterrows(), total=df.shape[0]):
         
        
-        # calculate headline sentiment and store
+        # checking if pre or post covid
         if int(row["YEAR"])<2021:
             era="pre"
         else:
             era="post"    
         df.loc[index,'ERA']=era
+        #calculating sentiment score for headline
         vs = analyzer.polarity_scores(row["HEADLINE"])
         score = vs['compound']
         df.loc[index,'HEADLINE_SENTIMENT_SCORE'] = score
@@ -497,7 +499,7 @@ def get_sentiments(inputfiles, name=None):
             df.loc[index,'HEADLINE_SENTIMENT'] = score
            
             
-        #calculate content sentiment  and store     
+        #calculate content sentiment and store     
         vs = analyzer.polarity_scores(row["CONTENT"])
         score = vs['compound']
         df.loc[index,'CONTENT_SENTIMENT_SCORE'] = score
@@ -512,6 +514,7 @@ def get_sentiments(inputfiles, name=None):
         else:
             score = 'neutral'
             df.loc[index,'CONTENT_SENTIMENT'] = score
+    #saving sentiment file        
     df.to_excel(str(name)+"_sentiments.xlsx",index=False)  
     df["DATE"] = pd.to_datetime(df["DATE"])
     df=df.sort_values('DATE')
@@ -539,7 +542,7 @@ def get_sentiments(inputfiles, name=None):
     ax.set_title('Articles per day before \n and after covid')
     ax.bar(keys, values, color ='maroon',width = 0.4)
     
-    
+    #saving figure
     plt.savefig(str(name)+"_average_articles_per_day_before_after_covid.png", bbox_inches='tight')
     
     
