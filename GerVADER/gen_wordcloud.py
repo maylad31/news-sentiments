@@ -55,10 +55,12 @@ def getwords_content_post(df: pd.DataFrame ,filename: str, german_stop_words: li
     """
     
     df=df.copy()
+    
     #drop pre covid data
     for index, row in df.iterrows():
         if int(row["YEAR"])<2021:
             df.drop(index, inplace=True)
+    
     df.dropna(inplace = True)
     
     #get text
@@ -148,9 +150,9 @@ def get_wordcloud(inputfiles: list[str], name: str or None = None, ignore_words:
     name = f"{'_'.join([s for s in starts])}"
     
     # append all the passed dataframes into one big one
-    df = pd.read_excel(inputfiles[0])[:200]
+    df = pd.read_excel(inputfiles[0])
     for file in inputfiles[1:]:
-        df = df.append(pd.read_excel(file)[:200], ignore_index=True)
+        df = df.append(pd.read_excel(file), ignore_index=True)
 
     # convert dates from string to datetime
     df['DATE'] = pd.to_datetime(df['DATE'])
@@ -173,6 +175,6 @@ if __name__=="__main__":
     # parser = argparse.ArgumentParser(description='Generate wordcloud')
     # parser.add_argument('-f','--file', help='input file name(with sentiments)', default="SPIEGEL_SCRAPING_BEREINIGT_12.07.2022_sentiments.xlsx")
     # args = vars(parser.parse_args())
-    get_wordcloud(inputfiles=["/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/FAZ_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
+    get_wordcloud(inputfiles = ["FAZ_SCRAPING_BEREINIGT_12.07.2022.xlsx", "SPIEGEL_SCRAPING_BEREINIGT_12.07.2022.xlsx", "BILD_SCRAPING_BEREINIGT_12.07.2022.xlsx",       "SUEDDEUTSCHE_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
     
        
