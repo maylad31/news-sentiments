@@ -133,8 +133,6 @@ def getrolling_headline_pre(df: pd.DataFrame, filename: str) -> None:
     res = df1.groupby('DATE', as_index=False, sort=False)['HEADLINE_SENTIMENT_SCORE'].mean()
     res['rolling_mean'] = res['HEADLINE_SENTIMENT_SCORE'].rolling(28).mean()
     avg_sentiment_list=[0]+res["rolling_mean"].tolist()[1:]
-    # avg_sentiment_list=avg_sentiment_list
-    date_list=["week "+str(i//7) for i in range(len(avg_sentiment_list))]
     
     #plotting average sentiment
     title = "Average sentiment pre covid \n considering headline"
@@ -157,12 +155,8 @@ def getrolling_headline_post(df: pd.DataFrame, filename: str) -> None:
     res = df1.groupby('DATE', as_index=False, sort=False)['HEADLINE_SENTIMENT_SCORE'].mean()
     res['rolling_mean'] = res['HEADLINE_SENTIMENT_SCORE'].rolling(28).mean()
     avg_sentiment_list=[0]+res["rolling_mean"].tolist()[1:]
-    # avg_sentiment_list=avg_sentiment_list
-    date_list=["week "+str(i//7) for i in range(len(avg_sentiment_list))]
-    plt.clf()
     
     #plotting average sentiment
-
     title = "Average sentiment post covid \n considering headline"
     name= f"{filename}_avg_sentiments_postcovid_headline"
     format_plot(y=avg_sentiment_list, title=title, x_label="Time", y_label="Score", name=name)
@@ -207,11 +201,6 @@ def getrolling_headline_overall(df: pd.DataFrame, filename: str) -> None:
    
     total_list=[0]+out["total"].tolist()[1:]   
        
-    #choose every 28th for easy plotting
-    # neutral_list=neutral_list
-    # positive_list=positive_list
-    # negative_list=negative_list
-    # total_list=total_list
     date_list=["week "+str(i//7) for i in range(len(neutral_list))]
     
     
@@ -231,7 +220,6 @@ def getrolling_headline_overall(df: pd.DataFrame, filename: str) -> None:
     res = df1.groupby('DATE', as_index=False, sort=False)['HEADLINE_SENTIMENT_SCORE'].mean()
     res['rolling_mean'] = res['HEADLINE_SENTIMENT_SCORE'].rolling(28).mean()
     avg_sentiment_list=[0]+res["rolling_mean"].tolist()[1:]
-    # avg_sentiment_list=avg_sentiment_list
     
     #plotting average sentiment
     title = "Average sentiment over time based on Headlines"
@@ -267,8 +255,6 @@ def getrolling_content_overall(df: pd.DataFrame, filename: str) -> None:
     negative_list=[0]+out["negative"].tolist()[1:]
     
     #calculating total no of articles
-    
-   
     out["total"]=0
     for index,row in out.iterrows():
         neutral=int(row["neutral"])
@@ -281,11 +267,6 @@ def getrolling_content_overall(df: pd.DataFrame, filename: str) -> None:
     total_list=[0]+out["total"].tolist()[1:]   
     
     
-    #choose every 28th for easy plotting
-    # neutral_list=neutral_list
-    # positive_list=positive_list
-    # negative_list=negative_list
-    # total_list=total_list
     date_list=["week"+str(i//7) for i in range(len(neutral_list))]
         
     #plotting positive negative neutral and total articles overtime
@@ -552,7 +533,7 @@ def get_sentiments(inputfiles, name=None):
     keys = list(data.keys())
     values = list(data.values())
    
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     # Add some text for labels, title and custom x-axis tick labels, etc.
     ax.set_ylabel('Articles per day')
     ax.set_title('Articles per day before \n and after covid')
