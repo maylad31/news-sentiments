@@ -9,11 +9,11 @@ import matplotlib as mpl
 import datetime
 label_size = 12
 mpl.rcParams['xtick.labelsize'] = label_size 
-plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "lmodern",
-    "font.size": 14,
-})
+# plt.rcParams.update({
+#     "text.usetex": True,
+#     "font.family": "lmodern",
+#     "font.size": 14,
+# })
 
 def format_plot(x: None or list = None, y: list = None, 
                 title: str = None, x_label: str = None,
@@ -547,7 +547,6 @@ def get_sentiments(inputfiles, name=None):
     
     
     
-if __name__=="__main__":
-    get_sentiments(["/Users/felixquinque/Documents/Programming/Work_Code/Sentiment Analysis/news-sentiments/GerVADER/BILD_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
+
     
        
