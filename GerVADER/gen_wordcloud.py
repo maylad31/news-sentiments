@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 from nltk.corpus import stopwords
+import cleantext
 
 
 
@@ -35,10 +36,13 @@ def getwords_content_pre(df: pd.DataFrame, filename: str, german_stop_words: lis
     text_list=df["CONTENT"].tolist()
     text=" ".join(text_list)
     text=text.lower()
+   
+    text=cleantext.clean(text, extra_spaces=True, lowercase=True, numbers=True, punct=True)
     
     text_list=[i for i in text.split() if i not in german_stop_words]
     text=" ".join(text_list)
     
+
     #generate wordcloud
     word_cloud = WordCloud(collocations = False, background_color = 'white').generate(text)
     #save wordcloud
@@ -67,7 +71,7 @@ def getwords_content_post(df: pd.DataFrame ,filename: str, german_stop_words: li
     text_list=df["CONTENT"].tolist()
     text=" ".join(text_list)
     text=text.lower()
-    
+    text=cleantext.clean(text, extra_spaces=True, lowercase=True, numbers=True, punct=True)
     text_list=[i for i in text.split() if i not in german_stop_words]
     text=" ".join(text_list)
     
@@ -94,7 +98,7 @@ def getwords_headline_pre(df: pd.DataFrame, filename: str, german_stop_words: li
     text_list=df["HEADLINE"].tolist()
     text=" ".join(text_list)
     text=text.lower()
-    
+    text=cleantext.clean(text, extra_spaces=True, lowercase=True, numbers=True, punct=True)
     text_list=[i for i in text.split() if i not in german_stop_words]
     text=" ".join(text_list)
     
@@ -122,8 +126,8 @@ def getwords_headline_post(df: pd.DataFrame, filename: str, german_stop_words: l
     text_list=df["HEADLINE"].tolist()
     text=" ".join(text_list)
     text=text.lower()
-    
-    text_list=[i for i in text.split() if i not in german_stop_words]
+    text=cleantext.clean(text, extra_spaces=True, lowercase=True, numbers=True, punct=True)
+    text_list=[i for i in text.split() if i.strip() not in german_stop_words]
     text=" ".join(text_list)
     
     #generate wordcloud
@@ -137,7 +141,7 @@ def getwords_headline_post(df: pd.DataFrame, filename: str, german_stop_words: l
 
         
 
-def get_wordcloud(inputfiles: list[str], name: str or None = None, ignore_words: list[str] = ["Spiegel, FAZ"]) -> None:
+def get_wordcloud(inputfiles: list[str], name: str or None = None, ignore_words: list[str] = ["spiegel","faz","die","mehr","sei","sagte"]) -> None:
     """
     generate wordcloud
     :param inputfile: input filename(.xlsx)
@@ -150,9 +154,9 @@ def get_wordcloud(inputfiles: list[str], name: str or None = None, ignore_words:
     name = f"{'_'.join([s for s in starts])}"
     
     # append all the passed dataframes into one big one
-    df = pd.read_excel(inputfiles[0])
+    df = pd.read_excel(inputfiles[0],nrows=3000)
     for file in inputfiles[1:]:
-        df = df.append(pd.read_excel(file), ignore_index=True)
+        df = df.append(pd.read_excel(file,nrows=3000),ignore_index=True)
 
     # convert dates from string to datetime
     df['DATE'] = pd.to_datetime(df['DATE'])
@@ -161,7 +165,8 @@ def get_wordcloud(inputfiles: list[str], name: str or None = None, ignore_words:
     
     # create list of stopwords and add all the words that should be ignored
     german_stop_words = list(stopwords.words('german'))+ignore_words
-
+    for i in range(len(german_stop_words)):
+        german_stop_words[i]=german_stop_words[i].lower()
     # generate the plots
     getwords_content_pre(df,name,german_stop_words)
     getwords_content_post(df,name,german_stop_words)
@@ -175,6 +180,6 @@ if __name__=="__main__":
     # parser = argparse.ArgumentParser(description='Generate wordcloud')
     # parser.add_argument('-f','--file', help='input file name(with sentiments)', default="SPIEGEL_SCRAPING_BEREINIGT_12.07.2022_sentiments.xlsx")
     # args = vars(parser.parse_args())
-    get_wordcloud(inputfiles = ["FAZ_SCRAPING_BEREINIGT_12.07.2022.xlsx", "SPIEGEL_SCRAPING_BEREINIGT_12.07.2022.xlsx", "BILD_SCRAPING_BEREINIGT_12.07.2022.xlsx",       "SUEDDEUTSCHE_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
+    get_wordcloud(inputfiles = ["FAZ_SCRAPING_BEREINIGT_12.07.2022.xlsx","BILD_SCRAPING_BEREINIGT_12.07.2022.xlsx","SUEDDEUTSCHE_SCRAPING_BEREINIGT_12.07.2022.xlsx","SPIEGEL_SCRAPING_BEREINIGT_12.07.2022.xlsx"])
     
        
